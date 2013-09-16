@@ -32,7 +32,7 @@
 #include "framework/Exception.h"
 
 #include <OgreSceneManager.h>
-#include <elements/CEGUIGUISheet.h>
+#include <CEGUI/Window.h>
 
 #include <sigc++/bind.h>
 

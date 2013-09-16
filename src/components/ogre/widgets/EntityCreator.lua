@@ -117,10 +117,10 @@ function EntityCreator:addAdapter(adapter, title, container, parentContainer)
 	end
 	local SizedConnection = container:subscribeEvent("Sized", syncWindowHeights)
 
-	outercontainer:addChildWindow(label)
-	outercontainer:addChildWindow(container)
+	outercontainer:addChild(label)
+	outercontainer:addChild(container)
 
-	parentContainer:addChildWindow(outercontainer)
+	parentContainer:addChild(outercontainer)
 	return outercontainer
 end
 

@@ -25,10 +25,10 @@
 #endif
 #include "GUICEGUIAdapter.h"
 
-#include <CEGUIExceptions.h>
-#include <CEGUIGlobalEventSet.h>
-#include <elements/CEGUIEditbox.h>
-#include <elements/CEGUIMultiLineEditbox.h>
+#include <CEGUI/Exceptions.h>
+#include <CEGUI/GlobalEventSet.h>
+#include <CEGUI/widgets/Editbox.h>
+#include <CEGUI/widgets/MultiLineEditbox.h>
 
 namespace Ember {
 namespace OgreView {
@@ -36,6 +36,7 @@ namespace OgreView {
 GUICEGUIAdapter::GUICEGUIAdapter(CEGUI::System *system, CEGUI::OgreRenderer *renderer):
 mGuiSystem(system)
 , mGuiRenderer(renderer)
+, mGuiContext(system->getDefaultGUIContext())
 , mSelectedText(0)
 , mSelectionStart(0)
 , mSelectionEnd(0)
@@ -166,7 +167,7 @@ GUICEGUIAdapter::~GUICEGUIAdapter()
 
 bool GUICEGUIAdapter::MultiLineEditbox_selectionChangedHandler(const CEGUI::EventArgs& args)
 {
-	CEGUI::MultiLineEditbox* editbox = static_cast<CEGUI::MultiLineEditbox*>(mGuiSystem->getGUISheet()->getActiveChild());
+	CEGUI::MultiLineEditbox* editbox = static_cast<CEGUI::MultiLineEditbox*>(mGuiContext.getInputCaptureWindow());
 	mSelectedText = &editbox->getText();
 	mSelectionStart = editbox->getSelectionStartIndex();
 	mSelectionEnd = editbox->getSelectionEndIndex();
@@ -182,7 +183,7 @@ bool GUICEGUIAdapter::MultiLineEditbox_selectionChangedHandler(const CEGUI::Even
 
 bool GUICEGUIAdapter::Editbox_selectionChangedHandler(const CEGUI::EventArgs& args)
 {
-	CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(mGuiSystem->getGUISheet()->getActiveChild());
+	CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(mGuiContext.getInputCaptureWindow());
 	mSelectedText = &editbox->getText();
 	mSelectionStart = editbox->getSelectionStartIndex();
 	mSelectionEnd = editbox->getSelectionEndIndex();
@@ -194,7 +195,7 @@ bool GUICEGUIAdapter::Editbox_selectionChangedHandler(const CEGUI::EventArgs& ar
 bool GUICEGUIAdapter::injectMouseMove(const MouseMotion& motion, bool& freezeMouse)
 {
 	try {
-		mGuiSystem->injectMousePosition(motion.xPosition, motion.yPosition);
+		mGuiContext.injectMousePosition(motion.xPosition, motion.yPosition);
 	} catch (const CEGUI::Exception& ex) {
 		S_LOG_WARNING("Error in CEGUI." << ex);
 	}
@@ -215,7 +216,7 @@ bool GUICEGUIAdapter::injectMouseButtonUp(const Input::MouseButton& button)
 	}
 
 	try {
-		mGuiSystem->injectMouseButtonUp(ceguiButton);
+		mGuiContext.injectMouseButtonUp(ceguiButton);
 		return false;
 	} catch (const std::exception& e) {
 		S_LOG_WARNING("Error in CEGUI." << e);
@@ -236,14 +237,14 @@ bool GUICEGUIAdapter::injectMouseButtonDown(const Input::MouseButton& button)
 		ceguiButton = CEGUI::MiddleButton;
 	} else if(button == Input::MouseWheelDown) {
 		try {
-			mGuiSystem->injectMouseWheelChange(-1.0);
+			mGuiContext.injectMouseWheelChange(-1.0);
 		} catch (const CEGUI::Exception& ex) {
 			S_LOG_WARNING("Error in CEGUI." << ex);
 		}
 		return false;
 	} else if(button == Input::MouseWheelUp) {
 		try {
-			mGuiSystem->injectMouseWheelChange(1.0);
+			mGuiContext.injectMouseWheelChange(1.0);
 		} catch (const CEGUI::Exception& ex) {
 			S_LOG_WARNING("Error in CEGUI." << ex);
 		}
@@ -253,7 +254,7 @@ bool GUICEGUIAdapter::injectMouseButtonDown(const Input::MouseButton& button)
 	}
 
 	try {
-		mGuiSystem->injectMouseButtonDown(ceguiButton);
+		mGuiContext.injectMouseButtonDown(ceguiButton);
 		return false;
 	} catch (const CEGUI::Exception& ex) {
 		S_LOG_WARNING("Error in CEGUI." << ex);
@@ -266,17 +267,17 @@ bool GUICEGUIAdapter::injectChar(int character)
 	try {
 		//cegui can't handle tabs, so we have to convert it to a couple of spaces
 		if (character == '\t') {
-			mGuiSystem->injectChar(' ');
-			mGuiSystem->injectChar(' ');
-			mGuiSystem->injectChar(' ');
-			mGuiSystem->injectChar(' ');
+			mGuiContext.injectChar(' ');
+			mGuiContext.injectChar(' ');
+			mGuiContext.injectChar(' ');
+			mGuiContext.injectChar(' ');
 		//can't handle CR either really, insert a line break (0x0a) instead
 		} else if (character == '\r') {
- 			//mGuiSystem->injectChar(0x0a);
- 			mGuiSystem->injectKeyDown(CEGUI::Key::Return);
- 			mGuiSystem->injectKeyUp(CEGUI::Key::Return);
+ 			//mGuiContext.injectChar(0x0a);
+ 			mGuiContext.injectKeyDown(CEGUI::Key::Return);
+ 			mGuiContext.injectKeyUp(CEGUI::Key::Return);
 		} else {
-			mGuiSystem->injectChar(character);
+			mGuiContext.injectChar(character);
 		}
 	} catch (const CEGUI::Exception& ex) {
 		S_LOG_WARNING("Error in CEGUI." << ex);
@@ -290,8 +291,8 @@ bool GUICEGUIAdapter::injectKeyDown(const SDLKey& key)
 	try {
 		SDLKeyMap::const_iterator I =  mKeyMap.find(key);
 		if (I != mKeyMap.end())  {
-			unsigned int scanCode = I->second;
-			mGuiSystem->injectKeyDown(scanCode);
+			const auto& scanCode = I->second;
+			mGuiContext.injectKeyDown(scanCode);
 		}
 	} catch (const CEGUI::Exception& ex) {
 		S_LOG_WARNING("Error in CEGUI." << ex);
@@ -305,8 +306,8 @@ bool GUICEGUIAdapter::injectKeyUp(const SDLKey& key)
 	try {
 		SDLKeyMap::const_iterator I =  mKeyMap.find(key);
 		if (I != mKeyMap.end())  {
-			unsigned int scanCode = I->second;
-			mGuiSystem->injectKeyUp(scanCode);
+			const auto& scanCode = I->second;
+			mGuiContext.injectKeyUp(scanCode);
 		}
 	} catch (const CEGUI::Exception& ex) {
 		S_LOG_WARNING("Error in CEGUI." << ex);

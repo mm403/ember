@@ -41,7 +41,7 @@ function ActionBar:addSlot()
 	slot:getWindow():setProperty("FrameEnabled", "true")
 	slot:getWindow():setProperty("BackgroundEnabled", "true")
 	slot:getWindow():setTooltipText("Drag and drop an entity from your inventory to attach it to this action bar slot.")
-	self.iconContainer:addChildWindow(slot:getWindow())
+	self.iconContainer:addChild(slot:getWindow())
 	
 	local slotWrapper = {slot = slot}
 	
@@ -319,7 +319,7 @@ function ActionBar:keyMapping(key, slotNum)
 		numWindow:setPosition(CEGUI.UVector2(CEGUI.UDim(0, 1), CEGUI.UDim(0, 1)))
 		numWindow:setHeight(CEGUI.UDim(0, 20))
 		numWindow:setMousePassThroughEnabled(true)
-		slotWrapper.slot:getWindow():addChildWindow(numWindow)
+		slotWrapper.slot:getWindow():addChild(numWindow)
 	end
 	
 	connect(self.connectors, input.key.EventGotHotkeyInput, self.gotInput, self)

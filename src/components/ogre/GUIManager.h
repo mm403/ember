@@ -26,22 +26,25 @@
 #include "framework/ConsoleObject.h"
 
 #include <OgreFrameListener.h>
-#include <CEGUIBase.h>
+#include <CEGUI/Vector.h>
 #include <sigc++/trackable.h>
 #include <SDL.h>
 #include <stack>
 
+
 namespace CEGUI
 {
-class GUISheet;
 class LuaScriptModule;
 class Window;
 class OgreResourceProvider;
 class OgreImageCodec;
 class OgreRenderer;
 class Renderer;
-class Vector2;
 class Texture;
+class System;
+class WindowManager;
+//template <typename> class Vector2;
+//typedef class Vector2<float> Vector2f;
 }
 
 namespace Eris

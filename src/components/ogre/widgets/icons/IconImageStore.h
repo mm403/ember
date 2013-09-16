@@ -31,7 +31,6 @@
 #include <OgreTexture.h>
 
 namespace CEGUI {
-	class Imageset;
 	class Image;
 	class Texture;
 }
@@ -73,7 +72,7 @@ public:
 protected:
 	void createImage();
 	
-	const CEGUI::Image* mImage;
+	CEGUI::Image* mImage;
 	IconImageStore& mIconImageStore;
 	PixelPos mPixelPosInImageset;
 	std::string mImageName;
@@ -138,7 +137,6 @@ private:
 	Ogre::MemoryDataStream* mImageDataStream;
 	Ogre::Image mImage;
 	CEGUI::Texture* mCeguiTexture;
-	CEGUI::Imageset* mImageset;
 	
 	IconImageStoreEntryStore mIconImages;
 	IconImageStoreEntryStack mUnclaimedIconImages;

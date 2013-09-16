@@ -12,7 +12,7 @@ function Admin:addMenuItem(labelText, clickMethod, tooltipText)
 	menuItem:setText(labelText)
 	menuItem:subscribeEvent("Clicked", clickMethod, self)
 	menuItem:setTooltipText(tooltipText)
-	self.popup:addChildWindow(menuItem)
+	self.popup:addChild(menuItem)
 	return menuItem
 end
 
@@ -148,7 +148,7 @@ function Admin:buildWidget()
 		self:addMenuItem("Visualize entities", self.VisualizeEntities_Click, "Visualizes entities.")
 		
 	
-		root:addChildWindow(self.popup)
+		root:addChild(self.popup)
 	end 
 end
 

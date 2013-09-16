@@ -25,7 +25,7 @@
 
 #include "components/ogre/EmberOgrePrerequisites.h"
 #include "components/ogre/SimpleRenderContext.h"
-#include <CEGUIEvent.h>
+#include <CEGUI/Event.h>
 #include <OgreFrameListener.h>
 namespace CEGUI
 {

@@ -32,8 +32,8 @@
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
 #include <OgrePixelCountLodStrategy.h>
-#include <CEGUIImage.h>
-#include <elements/CEGUIGUISheet.h>
+#include <CEGUI/Image.h>
+#include <CEGUI/Window.h>
 
 namespace Ember
 {

@@ -24,9 +24,9 @@
 #define EMBEROGREGUICEGUIADAPTER_H
 
 #include "EmberOgrePrerequisites.h"
-#include <CEGUISystem.h>
-#include <CEGUIEventArgs.h>
-#include <CEGUIInputEvent.h> 
+#include <CEGUI/System.h>
+#include <CEGUI/EventArgs.h>
+#include <CEGUI/InputEvent.h> 
 
 #include "services/input/IInputAdapter.h"
 #include "services/input/Input.h"
@@ -72,6 +72,7 @@ public:
 private:
 	CEGUI::System *mGuiSystem;
 	CEGUI::OgreRenderer *mGuiRenderer;
+	CEGUI::GUIContext &mGuiContext;
 	
 	/**
 	mapping of SDL-keys to CEGUI keys

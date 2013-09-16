@@ -26,17 +26,14 @@
 
 #include "AssetsManager.h"
 #ifdef _MSC_VER
-#include <RendererModules/Ogre/CEGUIOgreRenderer.h>
-#include <RendererModules/Ogre/CEGUIOgreTexture.h>
+#include <RendererModules/Ogre/Renderer.h>
+#include <RendererModules/Ogre/Texture.h>
 #else
-#include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
-#include <CEGUI/RendererModules/Ogre/CEGUIOgreTexture.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
+#include <CEGUI/RendererModules/Ogre/Texture.h>
 #endif
 #include <OgreMaterialSerializer.h>
 #include "../EmberOgrePrerequisites.h"
-
-#include <CEGUIImagesetManager.h>
-#include <CEGUIImageset.h>
 
 #include "../EmberOgre.h"
 #include "../GUIManager.h"
@@ -49,6 +46,10 @@
 #include <OgreString.h>
 #include <OgreMeshSerializer.h>
 // #include <OgreBitwise.h>
+
+#include <CEGUI/Image.h>
+#include <CEGUI/BasicImage.h>
+#include <CEGUI/ImageManager.h>
 
 
 namespace Ember
@@ -103,27 +104,18 @@ TexturePair AssetsManager::createTextureImage(Ogre::TexturePtr texturePtr, const
 	// 		mOgreCEGUITexture = 0;
 	// 	}
 
-
-	CEGUI::Imageset* textureImageset;
-
-	if (CEGUI::ImagesetManager::getSingleton().isDefined(imageSetName)) {
-		CEGUI::ImagesetManager::getSingleton().destroy(imageSetName);
+	if (CEGUI::ImageManager::getSingleton().isDefined(imageSetName)) {
+		CEGUI::ImageManager::getSingleton().destroy(imageSetName);
 	}
 	//create a CEGUI texture from our Ogre texture
 	S_LOG_VERBOSE("Creating new CEGUI texture from Ogre texture.");
 	CEGUI::Texture* ogreCEGUITexture = &GUIManager::getSingleton().createTexture(texturePtr);
 
-	//we need a imageset in order to create GUI elements from the ceguiTexture
-	S_LOG_VERBOSE("Creating new CEGUI imageset with name " << imageSetName);
-	textureImageset = &CEGUI::ImagesetManager::getSingleton().create(imageSetName, *ogreCEGUITexture);
-
-	//we only want one element: the whole texture
-	textureImageset->defineImage("full_image", CEGUI::Rect(0, 0, texturePtr->getWidth(), texturePtr->getHeight()), CEGUI::Point(0, 0));
-
 	//assign our image element to the StaticImage widget
-	const CEGUI::Image* textureImage = &textureImageset->getImage("full_image");
+	CEGUI::Image* textureImage = &CEGUI::ImageManager::getSingleton().create("BasicImage", imageSetName);
+	static_cast<CEGUI::BasicImage*>(textureImage)->setTexture(ogreCEGUITexture);
 
-	return TexturePair(texturePtr, textureImage, textureImageset);
+	return TexturePair(texturePtr, textureImage);
 
 }
 

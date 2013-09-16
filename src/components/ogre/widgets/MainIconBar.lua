@@ -45,7 +45,7 @@ end
 function MainIconBar:buildWidget()
 
 	self.iconBar = Ember.OgreView.Gui.IconBar:new("mainIcons")
-	guiManager:getMainSheet():addChildWindow(self.iconBar:getWindow())
+	guiManager:getMainSheet():addChild(self.iconBar:getWindow())
 	
 	--we'll use the same backgrounds for all icons
 	self.images.background = Ember.OgreView.Gui.IconBase:loadImageFromImageset("iconset_standard", "background_A")
@@ -198,7 +198,7 @@ function MainIconBar:shutdown()
 	MainIconBar.singletonInstance = nil
 	disconnectAll(self.connectors)
 
-	guiManager:getMainSheet():removeChildWindow(self.iconBar:getWindow())
+	guiManager:getMainSheet():removeChild(self.iconBar:getWindow())
 
 	self.iconBar:delete()
 	

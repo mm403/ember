@@ -27,7 +27,7 @@
 #include "ActiveWidgetHandler.h"
 
 #include "../GUIManager.h"
-#include <CEGUI.h>
+#include <CEGUI/CEGUI.h>
 
 using namespace Ember;
 namespace Ember {
@@ -69,7 +69,7 @@ void ActiveWidgetHandler::Input_InputModeChanged(Input::InputMode mode)
 		if (mLastActiveWidgetName != "") {
 			//restore the previously active widget
 			try {
-				CEGUI::Window* window = CEGUI::WindowManager::getSingleton().getWindow(mLastActiveWidgetName);
+				CEGUI::Window* window = mGuiManager.getMainSheet()->getChild(mLastActiveWidgetName);
 				if (window)
 				{
 					window->activate();

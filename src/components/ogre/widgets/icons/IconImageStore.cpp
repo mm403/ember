@@ -25,7 +25,7 @@
 #endif
 
 #include "IconImageStore.h"
-#include <CEGUI.h>
+#include <CEGUI/CEGUI.h>
 #include <Ogre.h>
 #include "framework/LoggingInstance.h"
 #include "components/ogre/GUIManager.h"
@@ -48,9 +48,9 @@ void IconImageStoreEntry::createImage()
 	std::stringstream ss;
 	ss << mPixelPosInImageset.first << "_" << mPixelPosInImageset.second;
 	mImageName = ss.str();
-	mIconImageStore.mImageset->defineImage(mImageName, CEGUI::Rect(mPixelPosInImageset.first, mPixelPosInImageset.second, mPixelPosInImageset.first + mIconImageStore.mIconSize, mPixelPosInImageset.second + mIconImageStore.mIconSize), CEGUI::Point(0,0));
 
-	mImage = &mIconImageStore.mImageset->getImage(mImageName);
+	mImage = &CEGUI::ImageManager::getSingleton().create("BasicImage", mImageName);
+	static_cast<CEGUI::BasicImage*>(mImage)->setArea(CEGUI::Rectf(mPixelPosInImageset.first, mPixelPosInImageset.second, mPixelPosInImageset.first + mIconImageStore.mIconSize, mPixelPosInImageset.second + mIconImageStore.mIconSize));
 
 }
 
@@ -110,7 +110,6 @@ IconImageStore::IconImageStore(const std::string& imagesetName)
 , mImageSize(256)
 , mImageDataStream(OGRE_NEW Ogre::MemoryDataStream(mImageSize * mImageSize * 4, true))
 , mCeguiTexture(0)
-, mImageset(0)
 {
 	createImageset();
 	createEntries();
@@ -124,13 +123,10 @@ IconImageStore::IconImageStore(const std::string& imagesetName, Ogre::TexturePtr
 , mTexPtr(texPtr)
 , mImageDataStream(0)
 , mCeguiTexture(0)
-, mImageset(0)
 {
 	mCeguiTexture = &GUIManager::getSingleton().createTexture(mTexPtr);
 	
-	//we need a imageset in order to create GUI elements from the ceguiTexture
-	mImageset = &CEGUI::ImagesetManager::getSingleton().create(mImagesetName, *mCeguiTexture);
-	
+
 	//we'll assume that height and width are the same
 	mImageSize = texPtr->getWidth();
 	mIconSize = mImageSize;
@@ -165,10 +161,6 @@ void IconImageStore::createImageset()
 
 	
 	mCeguiTexture = &GUIManager::getSingleton().createTexture(mTexPtr);
-	
-	//we need a imageset in order to create GUI elements from the ceguiTexture
-	//S_LOG_VERBOSE("Creating new CEGUI imageset with name " << imageSetName + "_EntityCEGUITextureImageset");
-	mImageset = &CEGUI::ImagesetManager::getSingleton().create(mImagesetName, *mCeguiTexture);
 	
 }
 

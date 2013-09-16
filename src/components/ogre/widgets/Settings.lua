@@ -557,7 +557,7 @@ function SettingsWidget:buildSettingsUi()
 		end
 		
 		local wnd = self:buildUiFor(category)
-		self.tabs:addChildWindow(wnd)
+		self.tabs:addChild(wnd)
 	end
 end
 
@@ -587,7 +587,7 @@ function SettingsWidget:buildUiFor(category)
 	description:setText(category.description)
 	description:setProperty("UnifiedSize", "{{1.0, -1.0}, {0.0, 50.0}}")
 	description:setProperty("HorzFormatting", "WordWrapLeftAligned")
-	vbox:addChildWindow(description)
+	vbox:addChild(description)
 	
 	local configService = emberServices:getConfigService()
 	
@@ -609,7 +609,7 @@ function SettingsWidget:buildUiFor(category)
 		label:setText(data.label)
 		label:setProperty("UnifiedSize", "{{0.4, 0.0}, {0.0, 30.0}}")
 		label:setProperty("FrameEnabled", "False")
-		hbox:addChildWindow(label)
+		hbox:addChild(label)
 		data.labelWnd = label
 		
 		for _, suggestion in ipairs(suggestions) do
@@ -618,7 +618,7 @@ function SettingsWidget:buildUiFor(category)
 		
 		local representationGuiRoot = representation:getGuiRoot()
 		representationGuiRoot:setProperty("UnifiedSize", "{{0.6, 0}, {0.0, 30.0}}")
-		hbox:addChildWindow(representationGuiRoot)
+		hbox:addChild(representationGuiRoot)
 		
 		hbox:setTooltipText(data.helpString)
 		
@@ -629,9 +629,9 @@ function SettingsWidget:buildUiFor(category)
 		--helpStringLabel:setProperty("UnifiedSize", "{{0.5, -1.0}, {0.0, 30.0}}")
 		--helpStringLabel:setProperty("FrameEnabled", "False")
 		--helpStringLabel:setProperty("HorzFormatting", "WordWrapLeftAligned")
-		--hbox:addChildWindow(helpStringLabel)
+		--hbox:addChild(helpStringLabel)
 		
-		vbox:addChildWindow(hbox)
+		vbox:addChild(hbox)
 		
 		-- store the representation in data so that we can query it later (to get current value)
 		data.representation = representation
@@ -645,7 +645,7 @@ function SettingsWidget:buildUiFor(category)
 		connect(self.connectors, representation:getEventValueChangedSignal(), valueChangedCall)
 	end
 	
-	ret:addChildWindow(vbox)
+	ret:addChild(vbox)
 	return ret
 end
 

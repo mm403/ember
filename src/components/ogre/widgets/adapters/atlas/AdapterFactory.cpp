@@ -37,7 +37,7 @@
 #include "AreaAdapter.h"
 #include "PolygonAdapter.h"
 #include "TerrainModAdapter.h"
-#include <CEGUI.h>
+#include <CEGUI/CEGUI.h>
 #include "components/ogre/GUIManager.h"
 #include "framework/LoggingInstance.h"
 #include <Eris/Entity.h>
@@ -155,8 +155,7 @@ template<>
 StringAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/StringAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	Combobox* stringWindow = static_cast<Combobox*> (windowMgr.getWindow(mCurrentPrefix + "String"));
+	Combobox* stringWindow = static_cast<Combobox*> (container->getChild(mCurrentPrefix + "String"));
 	return new StringAdapter(element, stringWindow);
 }
 
@@ -164,8 +163,7 @@ template<>
 NumberAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/NumberAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	Combobox* numberWindow = static_cast<Combobox*> (windowMgr.getWindow(mCurrentPrefix + "Number"));
+	Combobox* numberWindow = static_cast<Combobox*> (container->getChild(mCurrentPrefix + "Number"));
 	return new NumberAdapter(element, numberWindow);
 }
 
@@ -173,15 +171,14 @@ template<>
 SizeAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/SizeAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	Window* lowerX = windowMgr.getWindow(mCurrentPrefix + "lowerX");
-	Window* lowerY = windowMgr.getWindow(mCurrentPrefix + "lowerY");
-	Window* lowerZ = windowMgr.getWindow(mCurrentPrefix + "lowerZ");
-	Window* upperX = windowMgr.getWindow(mCurrentPrefix + "upperX");
-	Window* upperY = windowMgr.getWindow(mCurrentPrefix + "upperY");
-	Window* upperZ = windowMgr.getWindow(mCurrentPrefix + "upperZ");
-	Slider* scaler = static_cast<Slider*> (windowMgr.getWindow(mCurrentPrefix + "scaler"));
-	Window* info = windowMgr.getWindow(mCurrentPrefix + "info");
+	Window* lowerX = container->getChild(mCurrentPrefix + "lowerX");
+	Window* lowerY = container->getChild(mCurrentPrefix + "lowerY");
+	Window* lowerZ = container->getChild(mCurrentPrefix + "lowerZ");
+	Window* upperX = container->getChild(mCurrentPrefix + "upperX");
+	Window* upperY = container->getChild(mCurrentPrefix + "upperY");
+	Window* upperZ = container->getChild(mCurrentPrefix + "upperZ");
+	Slider* scaler = static_cast<Slider*> (container->getChild(mCurrentPrefix + "scaler"));
+	Window* info = container->getChild(mCurrentPrefix + "info");
 	return new SizeAdapter(element, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, scaler, info);
 }
 
@@ -189,11 +186,10 @@ template<>
 OrientationAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/OrientationAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	Window* x = windowMgr.getWindow(mCurrentPrefix + "x");
-	Window* y = windowMgr.getWindow(mCurrentPrefix + "y");
-	Window* z = windowMgr.getWindow(mCurrentPrefix + "z");
-	Window* scalar = windowMgr.getWindow(mCurrentPrefix + "scalar");
+	Window* x = container->getChild(mCurrentPrefix + "x");
+	Window* y = container->getChild(mCurrentPrefix + "y");
+	Window* z = container->getChild(mCurrentPrefix + "z");
+	Window* scalar = container->getChild(mCurrentPrefix + "scalar");
 	return new OrientationAdapter(element, x, y, z, scalar);
 }
 
@@ -201,11 +197,10 @@ template<>
 PositionAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/PositionAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	Window* x = windowMgr.getWindow(mCurrentPrefix + "x");
-	Window* y = windowMgr.getWindow(mCurrentPrefix + "y");
-	Window* z = windowMgr.getWindow(mCurrentPrefix + "z");
-	PushButton* moveButton = static_cast<PushButton*> (windowMgr.getWindow(mCurrentPrefix + "moveButton"));
+	Window* x = container->getChild(mCurrentPrefix + "x");
+	Window* y = container->getChild(mCurrentPrefix + "y");
+	Window* z = container->getChild(mCurrentPrefix + "z");
+	PushButton* moveButton = static_cast<PushButton*> (container->getChild(mCurrentPrefix + "moveButton"));
 	return new PositionAdapter(element, x, y, z, moveButton);
 }
 
@@ -213,9 +208,8 @@ template<>
 Position2DAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/Position2DAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	Window* x = windowMgr.getWindow(mCurrentPrefix + "x");
-	Window* y = windowMgr.getWindow(mCurrentPrefix + "y");
+	Window* x = container->getChild(mCurrentPrefix + "x");
+	Window* y = container->getChild(mCurrentPrefix + "y");
 	return new Position2DAdapter(element, x, y);
 }
 
@@ -244,9 +238,8 @@ template<>
 AreaAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/AreaAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	PushButton* button = static_cast<PushButton*> (windowMgr.getWindow(mCurrentPrefix + "showButton"));
-	Combobox* layerWindow = static_cast<Combobox*> (windowMgr.getWindow(mCurrentPrefix + "Layer"));
+	PushButton* button = static_cast<PushButton*> (container->getChild(mCurrentPrefix + "showButton"));
+	Combobox* layerWindow = static_cast<Combobox*> (container->getChild(mCurrentPrefix + "Layer"));
 	return new AreaAdapter(element, button, layerWindow, entity);
 }
 
@@ -254,8 +247,7 @@ template<>
 PolygonAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/PolygonAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	PushButton* button = static_cast<PushButton*> (windowMgr.getWindow(mCurrentPrefix + "showButton"));
+	PushButton* button = static_cast<PushButton*> (container->getChild(mCurrentPrefix + "showButton"));
 	return new PolygonAdapter(element, button, entity);
 }
 
@@ -263,11 +255,10 @@ template<>
 TerrainModAdapter* AdapterFactory::loadWindowIntoAdapter(CEGUI::Window* container, const std::string& adapterPrefix, const ::Atlas::Message::Element& element, EmberEntity* entity)
 {
 	loadLayoutIntoContainer(container, adapterPrefix, "adapters/atlas/TerrainModAdapter.layout");
-	WindowManager& windowMgr = WindowManager::getSingleton();
-	PushButton* button = static_cast<PushButton*> (windowMgr.getWindow(mCurrentPrefix + "showButton"));
-	Combobox* posType = static_cast<Combobox*> (windowMgr.getWindow(mCurrentPrefix + "posType"));
-	Combobox* modType = static_cast<Combobox*> (windowMgr.getWindow(mCurrentPrefix + "modType"));
-	Editbox* heightEditbox = static_cast<Editbox*> (windowMgr.getWindow(mCurrentPrefix + "height"));
+	PushButton* button = static_cast<PushButton*> (container->getChild(mCurrentPrefix + "showButton"));
+	Combobox* posType = static_cast<Combobox*> (container->getChild(mCurrentPrefix + "posType"));
+	Combobox* modType = static_cast<Combobox*> (container->getChild(mCurrentPrefix + "modType"));
+	Editbox* heightEditbox = static_cast<Editbox*> (container->getChild(mCurrentPrefix + "height"));
 	return new TerrainModAdapter(element, button, entity, posType, modType, heightEditbox);
 }
 
@@ -418,12 +409,10 @@ CEGUI::Window* AdapterFactory::loadLayoutIntoContainer(CEGUI::Window* container,
 
 		std::string finalFileName(GUIManager::getSingleton().getLayoutDir() + layoutfile);
 		std::stringstream ss;
-		ss << mPrefix << adapterPrefix << (msAutoGenId++);
-		mCurrentPrefix = ss.str();
-		CEGUI::Window* window = windowManager.loadWindowLayout(finalFileName, mCurrentPrefix);
+		CEGUI::Window* window = windowManager.loadLayoutFromFile(finalFileName);
 		if (window) {
 			if (container) {
-				container->addChildWindow(window);
+				container->addChild(window);
 				container->setHeight(window->getHeight());
 				container->setWidth(window->getWidth());
 			}

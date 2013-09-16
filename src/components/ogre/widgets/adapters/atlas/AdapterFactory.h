@@ -240,11 +240,6 @@ protected:
 	std::string mPrefix;
 
 	/**
-	 * @brief The prefix used for the current loaded layout.
-	 */
-	std::string mCurrentPrefix;
-
-	/**
 	 * @brief Creates a new adapter for the templated type.
 	 * This will in turn call on loadWindowIntoAdapter() for the specific type, but wrap everything in some commonly useful error handling methods.
 	 * @param container The container window into which the adapter should be loaded.
@@ -275,11 +270,6 @@ protected:
 
 
 };
-
-inline const std::string& AdapterFactory::getCurrentPrefix() const
-{
-	return mCurrentPrefix;
-}
 
 }
 

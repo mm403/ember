@@ -35,11 +35,13 @@
 #include "framework/Time.h"
 #include "framework/MainLoopController.h"
 
-#include <RendererModules/Ogre/CEGUIOgreRenderer.h>
-#include <RendererModules/Ogre/CEGUIOgreResourceProvider.h>
-#include <CEGUI.h>
-#include <elements/CEGUICombobox.h>
-#include <elements/CEGUIListboxTextItem.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
+#include <CEGUI/RendererModules/Ogre/ResourceProvider.h>
+#include <CEGUI/CEGUI.h>
+#include <CEGUI/widgets/Combobox.h>
+#include <CEGUI/widgets/ListboxTextItem.h>
+#include <CEGUI/widgets/ToggleButton.h>
+
 
 #include <OgreRoot.h>
 #include <OgreRenderWindow.h>
@@ -151,18 +153,18 @@ OgreConfigurator::Result OgreConfigurator::configure()
 
 	CEGUI::System::create(renderer, &rp);
 	try {
-		CEGUI::SchemeManager::getSingleton().create("cegui/datafiles/schemes/EmberLookSkinMinimal.scheme", "");
-		CEGUI::System::getSingleton().setDefaultFont("DejaVuSans-8");
-		CEGUI::ImagesetManager::getSingleton().create("cegui/datafiles/imagesets/splash.imageset", "");
-		CEGUI::System::getSingleton().setDefaultTooltip("EmberLook/Tooltip");
+		CEGUI::SchemeManager::getSingleton().createFromFile("cegui/datafiles/schemes/EmberLookSkinMinimal.scheme", "");
+		CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont("DejaVuSans-8");
+		CEGUI::ImageManager::getSingleton().loadImageset("cegui/datafiles/imagesets/splash.imageset", "");
+//		CEGUI::System::getSingleton().setDefaultTooltip("EmberLook/Tooltip");
 
-		CEGUI::Window* sheet = CEGUI::WindowManager::getSingleton().createWindow("DefaultGUISheet", "root_wnd");
-		CEGUI::System::getSingleton().setGUISheet(sheet);
+		CEGUI::Window* sheet = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root_wnd");
+		CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
-		CEGUI::System::getSingleton().setDefaultMouseCursor("EmberLook", "MouseArrow");
+		CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setImage("EmberLook/MouseArrow");
 
-		mConfigWindow = CEGUI::WindowManager::getSingleton().loadWindowLayout("cegui/datafiles/layouts/OgreConfigurator.layout", "OgreConfigure/");
-		sheet->addChildWindow(mConfigWindow);
+		mConfigWindow = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("cegui/datafiles/layouts/OgreConfigurator.layout");
+		sheet->addChild(mConfigWindow);
 
 		CEGUI::Window* renderSystemWrapper = mConfigWindow->getChildRecursive("OgreConfigure/RenderSystem_wrapper");
 		assert(renderSystemWrapper);
@@ -170,7 +172,7 @@ OgreConfigurator::Result OgreConfigurator::configure()
 		assert(renderSystemsBox);
 		//If we only have one render system available we should hide the render system combobox.
 		if (renderers.size() == 1) {
-			renderSystemWrapper->getParent()->removeChildWindow(renderSystemWrapper);
+			renderSystemWrapper->getParent()->removeChild(renderSystemWrapper);
 		} else {
 			int i = 0;
 			for (Ogre::RenderSystemList::const_iterator I = renderers.begin(); I != renderers.end(); ++I) {
@@ -192,8 +194,8 @@ OgreConfigurator::Result OgreConfigurator::configure()
 		CEGUI::Window* advancedButton = mConfigWindow->getChildRecursive("OgreConfigure/Advanced");
 		advancedButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&OgreConfigurator::buttonAdvancedClicked, this));
 
-		CEGUI::Checkbox* fullscreenCheckbox = static_cast<CEGUI::Checkbox*>(mConfigWindow->getChildRecursive("OgreConfigure/Fullscreen"));
-		CEGUI::Checkbox* dontShowAgainCheckbox = static_cast<CEGUI::Checkbox*>(mConfigWindow->getChildRecursive("OgreConfigure/DontShowAgain"));
+		auto fullscreenCheckbox = static_cast<CEGUI::ToggleButton*>(mConfigWindow->getChildRecursive("OgreConfigure/Fullscreen"));
+		auto dontShowAgainCheckbox = static_cast<CEGUI::ToggleButton*>(mConfigWindow->getChildRecursive("OgreConfigure/DontShowAgain"));
 
 		IInputAdapter* adapter = new GUICEGUIAdapter(CEGUI::System::getSingletonPtr(), &renderer);
 		Input& input = Input::getSingleton();

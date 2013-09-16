@@ -29,7 +29,7 @@ EntityEditor = {
 
 				if prototype.readonly == nil then
 					local newElementWrapper = self.adapters.map.createNewElementWidget(self, wrapper.adapter, wrapper.container, element)
-					wrapper.container:addChildWindow(newElementWrapper.container)
+					wrapper.container:addChild(newElementWrapper.container)
 				end
 				return wrapper
 			end,
@@ -128,7 +128,7 @@ EntityEditor = {
 							wrapper.adapter:addAttributeAdapter(name, adapterWrapper.adapter, adapterWrapper.outercontainer)
 							self:addNamedAdapterContainer(name, adapterWrapper.adapter, adapterWrapper.container, wrapper.outercontainer, newPrototype)
 							--by adding the window again we make sure that it's at the bottom of the child window list
-							wrapper.outercontainer:addChildWindow(wrapper.container)
+							wrapper.outercontainer:addChild(wrapper.container)
 							nameEditboxCombobox:getEditbox():setText("")
 							nameEditboxEditbox:setText("")
 							helpWindow:setText("")
@@ -171,7 +171,7 @@ EntityEditor = {
 
 				if prototype.readonly == nil then
 					local newElementWrapper = self.adapters.list.createNewElementWidget(self, wrapper.adapter, wrapper.container)
-					wrapper.container:addChildWindow(newElementWrapper.container)
+					wrapper.container:addChild(newElementWrapper.container)
 				end
 
 				return wrapper
@@ -204,7 +204,7 @@ EntityEditor = {
 							local newPrototype = {}
 							self:addUnNamedAdapterContainer(adapterWrapper.adapter, adapterWrapper.container, wrapper.outercontainer, newPrototype)
 							--by adding the window again we make sure that it's at the bottom of the child window list
-							wrapper.outercontainer:addChildWindow(wrapper.container)
+							wrapper.outercontainer:addChild(wrapper.container)
 						end
 					end
 				end
@@ -306,7 +306,7 @@ EntityEditor = {
 				end
 
 				local newElementWrapper = self.adapters.points.createNewElementWidget(self, wrapper.adapter, wrapper.container)
-				wrapper.container:addChildWindow(newElementWrapper.container)
+				wrapper.container:addChild(newElementWrapper.container)
 
 				return wrapper
 			end,
@@ -350,7 +350,7 @@ EntityEditor = {
 							wrapper.adapter:addAttributeAdapter(adapterWrapper.adapter, adapterWrapper.outercontainer)
 							self:addUnNamedAdapterContainer(adapterWrapper.adapter, adapterWrapper.container, wrapper.outercontainer, newPrototype)
 							--by adding the window again we make sure that it's at the bottom of the child window list
-							wrapper.outercontainer:addChildWindow(wrapper.container)
+							wrapper.outercontainer:addChild(wrapper.container)
 						end
 					end
 				end
@@ -1026,7 +1026,7 @@ function EntityEditor:editEntity(entity)
 	local adapter = self.factory:createMapAdapter(self.instance.outercontainer, self.instance.entity:getId(), self.instance.entity)
 	self.instance.rootMapAdapter = adapter
 	self.instance.helper = Ember.OgreView.Gui.EntityEditor:new(self.world, entity, self.instance.rootMapAdapter)
-	self.attributesContainer:addChildWindow(self.instance.outercontainer)
+	self.attributesContainer:addChild(self.instance.outercontainer)
 
 	local attributeNames = self.instance.rootMapAdapter:getAttributeNames()
 	for i = 0, attributeNames:size() - 1 do
@@ -1045,7 +1045,7 @@ function EntityEditor:editEntity(entity)
 	--Set the height of the new property adapter to be enough to contain the combobox dropdown.
 	--The reason for this is that else the horizontal scroll bar of the scrollable pane will overlap the dropdown (this might be a bug in CEGUI though).
 	self.instance.model.newAdapter.container:setHeight(CEGUI.UDim(0, 100))
-	self.instance.outercontainer:addChildWindow(self.instance.model.newAdapter.container)
+	self.instance.outercontainer:addChild(self.instance.model.newAdapter.container)
 
 
 	self.infoWindow:setText('Id: ' .. entity:getId() .. ' Name: ' .. entity:getName())
@@ -1266,11 +1266,11 @@ function EntityEditor:addUnNamedAdapterContainer(adapter, container, parentConta
 	local SizedConnection = container:subscribeEvent("Sized", syncWindowHeights)
 
 	if deleteButton then
-		outercontainer:addChildWindow(deleteButton)
+		outercontainer:addChild(deleteButton)
 	end
-	outercontainer:addChildWindow(container)
+	outercontainer:addChild(container)
 
-	parentContainer:addChildWindow(outercontainer)
+	parentContainer:addChild(outercontainer)
 	return outercontainer
 end
 
@@ -1331,13 +1331,13 @@ function EntityEditor:addNamedAdapterContainer(attributeName, adapter, container
 		end
 		deleteButton:subscribeEvent("Clicked", removeAdapter)
 
-		label:addChildWindow(deleteButton)
+		label:addChild(deleteButton)
 	end
 
-	outercontainer:addChildWindow(label)
-	outercontainer:addChildWindow(container)
+	outercontainer:addChild(label)
+	outercontainer:addChild(container)
 
-	parentContainer:addChildWindow(outercontainer)
+	parentContainer:addChild(outercontainer)
 	return outercontainer
 end
 

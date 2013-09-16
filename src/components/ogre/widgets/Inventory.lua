@@ -57,7 +57,7 @@ function Inventory:addSlot()
 	
 	local slot = self.entityIconManager:createSlot(self.iconsize)
 	slot:getWindow():setPosition(CEGUI.UVector2(CEGUI.UDim(0, self.iconsize * xPosition), CEGUI.UDim(0, self.iconsize * yPosition)))
-	self.iconContainer:addChildWindow(slot:getWindow())
+	self.iconContainer:addChild(slot:getWindow())
 	local slotWrapper = {slot = slot}
 	table.insert(self.slots, slotWrapper)
 	slotWrapper.entityIconDropped = function(entityIcon)
@@ -75,7 +75,7 @@ end
 
 function Inventory:showMenu(args, entityIconWrapper)
 	self.menu.activeEntityWrapper = entityIconWrapper
-	guiManager:getMainSheet():addChildWindow(self.menu.container)
+	guiManager:getMainSheet():addChild(self.menu.container)
 	self.menu.menuShown = true
 	self.menu.innercontainer:setYPosition(CEGUI.UDim(1, -(self.iconsize + self.menu.innercontainer:getHeight():asAbsolute(0))))
 	self.menu.container:setHeight(CEGUI.UDim(0, self.iconsize + self.menu.innercontainer:getHeight():asAbsolute(0) + 10))
@@ -157,11 +157,11 @@ function Inventory:buildWidget(avatarEntity)
 	self.menu.innercontainer:setClippedByParent(false)
 	self.menu.stackableContainer = Ember.OgreView.Gui.StackableContainer:new_local(self.menu.innercontainer)
 	self.menu.stackableContainer:setInnerContainerWindow(self.menu.innercontainer)
-	self.menu.container:addChildWindow(self.menu.innercontainer)
+	self.menu.container:addChild(self.menu.innercontainer)
 	self.menu.innercontainer:setPosition(CEGUI.UVector2(CEGUI.UDim(0, 10), CEGUI.UDim(1, -self.iconsize)))
 	
 	self.menu.hide = function()
-		self.menu.container:getParent():removeChildWindow(self.menu.container)
+		self.menu.container:getParent():removeChild(self.menu.container)
 		self.menu.menuShown = false
 	end
 	
@@ -193,7 +193,7 @@ function Inventory:buildWidget(avatarEntity)
 		return true
 	end
 	self.menu.eatButton:subscribeEvent("Clicked", self.menu.eatButton_MouseClick)
-	self.menu.innercontainer:addChildWindow(self.menu.eatButton)
+	self.menu.innercontainer:addChild(self.menu.eatButton)
 	
 	
 	self.menu.dropButton = guiManager:createWindow("EmberLook/Button")
@@ -209,7 +209,7 @@ function Inventory:buildWidget(avatarEntity)
 		return true
 	end
 	self.menu.dropButton:subscribeEvent("Clicked", self.menu.dropButton_MouseClick)
-	self.menu.innercontainer:addChildWindow(self.menu.dropButton)
+	self.menu.innercontainer:addChild(self.menu.dropButton)
 		
 		
 	self.menu.wieldButton = guiManager:createWindow("EmberLook/Button")
@@ -225,7 +225,7 @@ function Inventory:buildWidget(avatarEntity)
 		return true
 	end
 	self.menu.wieldButton:subscribeEvent("Clicked", self.menu.wieldButton_MouseClick)
-	self.menu.innercontainer:addChildWindow(self.menu.wieldButton)
+	self.menu.innercontainer:addChild(self.menu.wieldButton)
 	
 	self.menu.useButton = guiManager:createWindow("EmberLook/Button")
 	self.menu.useButton:setSize(CEGUI.UVector2(CEGUI.UDim(1, 0), CEGUI.UDim(0, 25)))
@@ -240,7 +240,7 @@ function Inventory:buildWidget(avatarEntity)
 		return true
 	end
 	self.menu.useButton:subscribeEvent("Clicked", self.menu.useButton_MouseClick)
-	self.menu.innercontainer:addChildWindow(self.menu.useButton)
+	self.menu.innercontainer:addChild(self.menu.useButton)
 	
 	self.helper = Ember.OgreView.Gui.EntityIconDragDropPreview:new(emberOgre:getWorld())
 	--User has dragged an entityIcon from the inventory to the world
@@ -309,7 +309,7 @@ function Inventory:buildWidget(avatarEntity)
 	]]--
 	self.widget:show()
 -- 	connect(self.connectors, Ember.Input:getSingleton().EventMouseButtonReleased, self.input_MouseButtonReleased, self)
---	guiManager:getMainSheet():addChildWindow(self.menu.container)
+--	guiManager:getMainSheet():addChild(self.menu.container)
 
 	
 end
@@ -431,7 +431,7 @@ function Inventory:createDollSlot(attributePath, containerWindow, tooltipText, w
 	local dollSlot = {}
 	dollSlot.slot = self.entityIconManager:createSlot(self.iconsize)
 	dollSlot.container = containerWindow
-	dollSlot.container:addChildWindow(dollSlot.slot:getWindow())
+	dollSlot.container:addChild(dollSlot.slot:getWindow())
 	dollSlot.slot:getWindow():setInheritsTooltipText(true)
 	dollSlot.container:setTooltipText(tooltipText)
 	dollSlot.wearRestriction = wearRestriction

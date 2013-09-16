@@ -56,19 +56,19 @@
 #include <varconf/varconf.h>
 #include <fstream>
 
-#include <elements/CEGUIListbox.h>
-#include <elements/CEGUIListboxItem.h>
-#include <elements/CEGUIListboxTextItem.h>
-#include <elements/CEGUIPushButton.h>
-#include <elements/CEGUIEditbox.h>
-#include <elements/CEGUIMultiLineEditbox.h>
-#include <elements/CEGUIRadioButton.h>
-#include <elements/CEGUICheckbox.h>
-#include <elements/CEGUIComboDropList.h>
-#include <elements/CEGUICombobox.h>
-#include <elements/CEGUITabControl.h>
-#include <elements/CEGUIGUISheet.h>
-#include <CEGUIExceptions.h>
+#include <CEGUI/widgets/Listbox.h>
+#include <CEGUI/widgets/ListboxItem.h>
+#include <CEGUI/widgets/ListboxTextItem.h>
+#include <CEGUI/widgets/PushButton.h>
+#include <CEGUI/widgets/Editbox.h>
+#include <CEGUI/widgets/MultiLineEditbox.h>
+#include <CEGUI/widgets/RadioButton.h>
+#include <CEGUI/widgets/ToggleButton.h>
+#include <CEGUI/widgets/ComboDropList.h>
+#include <CEGUI/widgets/Combobox.h>
+#include <CEGUI/widgets/TabControl.h>
+#include <CEGUI/Window.h>
+#include <CEGUI/Exceptions.h>
 
 #include <sigc++/bind.h>
 
@@ -277,11 +277,11 @@ bool ServerWidget::saveCredentials()
 	// pull widget references
 	CEGUI::Window* nameBox(0);
 	CEGUI::Window* passwordBox(0);
-	CEGUI::Checkbox* saveBox(0);
+	CEGUI::ToggleButton* saveBox(0);
 	try {
 		nameBox = getWindow("LoginPanel/NameEdit");
 		passwordBox = getWindow("LoginPanel/PasswordEdit");
-		saveBox = static_cast<CEGUI::Checkbox*> (getWindow("LoginPanel/SavePassCheck"));
+		saveBox = static_cast<CEGUI::ToggleButton*> (getWindow("LoginPanel/SavePassCheck"));
 	} catch (const CEGUI::Exception& ex) {
 		S_LOG_FAILURE("Error when getting windows from CEGUI." << ex);
 		return false;
@@ -316,7 +316,7 @@ void ServerWidget::loginSuccess(Eris::Account* account)
 	account->refreshCharacterInfo();
 	fillAllowedCharacterTypes(account);
 
-	CEGUI::Checkbox* saveBox = static_cast<CEGUI::Checkbox*> (getWindow("LoginPanel/SavePassCheck"));
+	CEGUI::ToggleButton* saveBox = static_cast<CEGUI::ToggleButton*> (getWindow("LoginPanel/SavePassCheck"));
 	if (saveBox->isSelected()) {
 		try {
 			saveCredentials();
@@ -331,20 +331,20 @@ void ServerWidget::loginSuccess(Eris::Account* account)
 
 void ServerWidget::showLoginFailure(Eris::Account* account, std::string msg)
 {
-	CEGUI::GUISheet* helpText = static_cast<CEGUI::GUISheet*> (getWindow("LoginPanel/HelpText"));
+	auto helpText = getWindow("LoginPanel/HelpText");
 	helpText->setYPosition(UDim(0.6, 0));
 
-	CEGUI::GUISheet* loginFailure = static_cast<CEGUI::GUISheet*> (getWindow("LoginPanel/LoginFailure"));
+	auto loginFailure = getWindow("LoginPanel/LoginFailure");
 	loginFailure->setText(msg);
 	loginFailure->setVisible(true);
 }
 
 bool ServerWidget::hideLoginFailure()
 {
-	CEGUI::GUISheet* helpText = static_cast<CEGUI::GUISheet*> (getWindow("LoginPanel/HelpText"));
+	auto helpText = getWindow("LoginPanel/HelpText");
 	helpText->setYPosition(UDim(0.55, 0));
 
-	CEGUI::GUISheet* loginFailure = static_cast<CEGUI::GUISheet*> (getWindow("LoginPanel/LoginFailure"));
+	auto loginFailure = getWindow("LoginPanel/LoginFailure");
 	loginFailure->setVisible(false);
 
 	return true;
@@ -664,7 +664,7 @@ void ServerWidget::avatar_Deactivated(Eris::Avatar* avatar)
 
 void ServerWidget::createPreviewTexture()
 {
-	CEGUI::GUISheet* imageWidget = static_cast<CEGUI::GUISheet*> (getWindow("CreateCharacterPanel/Image"));
+	auto imageWidget = getWindow("CreateCharacterPanel/Image");
 	if (!imageWidget) {
 		S_LOG_FAILURE("Could not find CreateCharacterPanel/Image, aborting creation of preview texture.");
 	} else {
